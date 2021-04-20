@@ -8,7 +8,7 @@
 
 **Git Page**
 
-* [Ссылка на сайт]()
+* [Ссылка на сайт](https://galeav.github.io/mesto/)
 
 **Figma**
 
