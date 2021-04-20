@@ -9,7 +9,7 @@ function popup_status(event) {
 openPopup.addEventListener('click', popup_status);
 closePopup.addEventListener('click', popup_status);
 
-//Функционал для изменения значения value у форм попапа
+//Переменные для изменения значения value у форм попапа
 let formPopup = document.querySelector('.popup__edit-form');
 let nameInput = document.getElementById('nameInput');
 let jobInput = document.getElementById('proffInput');
@@ -18,6 +18,11 @@ let nameValue = '';
 let profileName = document.querySelector('.profile__title');
 let profileJob = document.querySelector('.profile__subtitle');
 
+//Функционал заполняет поля для ввода данными из строк
+nameInput.setAttribute('value', profileName.textContent);
+jobInput.setAttribute('value',  profileJob.textContent);
+
+//Функционал для изменения значения value у форм попапа
 function formSubmitHandler(evt) {
   evt.preventDefault();
 
