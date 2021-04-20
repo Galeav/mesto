@@ -3,3 +3,10 @@
   flex-wrap: wrap;
   flex-direction: column;
 }
+
+@media (max-width: 620px) {
+  .profile__info {
+    justify-content: center;
+    margin-top: 22px;
+  }
+}

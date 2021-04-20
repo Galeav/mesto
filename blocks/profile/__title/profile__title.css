@@ -8,3 +8,18 @@
   line-height: 48px;
   color: #FFFFFF;
 }
+
+@media (max-width: 620px) {
+  .profile__title {
+    margin-right: 10px;
+    margin-left: 34px;
+  }
+}
+
+@media (max-width: 479px) {
+  .profile__title {
+    font-size: 27px;
+    line-height: 33px;
+    text-align: center;
+  }
+}

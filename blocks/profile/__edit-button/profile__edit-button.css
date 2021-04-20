@@ -6,4 +6,12 @@
   width: 24px;
   height: 24px;
   border: 1px solid #FFFFFF;
+  transition: 0.5s;
+  box-sizing: border-box;
+}
+
+@media (max-width: 620px) {
+  .profile__edit-button {
+    margin-left: 0;
+  }
 }

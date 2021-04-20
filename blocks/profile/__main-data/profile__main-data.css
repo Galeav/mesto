@@ -3,3 +3,16 @@
   flex-wrap: wrap;
   align-items: center;
 }
+
+@media (max-width: 919px) {
+  .profile__main-data {
+    margin-left: 12px;
+  }
+}
+
+@media (max-width: 620px) {
+  .profile__main-data {
+    margin-left: 0;
+    flex-direction: column;
+  }
+}

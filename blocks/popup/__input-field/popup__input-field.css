@@ -1,0 +1,19 @@
+.popup__input-field {
+  margin: 47px auto 0;
+  padding: 0;
+  display: block;
+  font-family: inherit;
+  width: 358px;
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.popup__input-field:focus {
+  outline: none;
+}
+
+@media (max-width: 559px) {
+  .popup__input-field {
+    width: 238px;
+  }
+}
