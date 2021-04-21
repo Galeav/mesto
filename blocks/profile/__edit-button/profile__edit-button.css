@@ -1,17 +1,22 @@
 .profile__edit-button {
   display: flex;
+  flex: none;
   justify-content: center;
   align-items: center;
   margin-left: 18px;
+  margin-right: 18px;
   width: 24px;
   height: 24px;
   border: 1px solid #FFFFFF;
   transition: 0.5s;
   box-sizing: border-box;
+  background: transparent;
 }
 
 @media (max-width: 620px) {
   .profile__edit-button {
     margin-left: 0;
+    width: 18px;
+    height: 18px;
   }
 }

@@ -3,33 +3,31 @@ let openPopup = document.querySelector('.profile__edit-button');
 let popup = document.querySelector('.popup');
 let closePopup = document.querySelector('.popup__close');
 
-function popup_status(event) {
+function popupStatus(event) {
   popup.classList.toggle('popup_opened');
+  //Функционал заполняет поля для ввода данными из строк
+  let popupOp = popup.classList.contains('popup_opened');
+  if (popupOp) {
+    nameInput.value = profileName.textContent;
+    jobInput.value = profileJob.textContent;
+  }
 }
-openPopup.addEventListener('click', popup_status);
-closePopup.addEventListener('click', popup_status);
 
 //Переменные для изменения значения value у форм попапа
 let formPopup = document.querySelector('.popup__edit-form');
 let nameInput = document.getElementById('nameInput');
 let jobInput = document.getElementById('proffInput');
-let jobValue = '';
-let nameValue = '';
 let profileName = document.querySelector('.profile__title');
 let profileJob = document.querySelector('.profile__subtitle');
-
-//Функционал заполняет поля для ввода данными из строк
-nameInput.setAttribute('value', profileName.textContent);
-jobInput.setAttribute('value',  profileJob.textContent);
 
 //Функционал для изменения значения value у форм попапа
 function formSubmitHandler(evt) {
   evt.preventDefault();
 
-  jobValue = jobInput.value;
-  nameValue = nameInput.value;
-  profileName.textContent = nameValue;
-  profileJob.textContent = jobValue;
-  popup_status();
+  profileName.textContent = nameInput.value;
+  profileJob.textContent = jobInput.value;
+  popupStatus();
 }
 formPopup.addEventListener('submit', formSubmitHandler);
+openPopup.addEventListener('click', popupStatus);
+closePopup.addEventListener('click', popupStatus);
