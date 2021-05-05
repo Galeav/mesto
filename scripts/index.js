@@ -40,7 +40,7 @@ let closePlacePopup = document.querySelector('.popup-place__close');
 
 function popupPlaceStatus(event) {
   popupPlace.classList.toggle('popup_opened');
-  testing(); //Функция отвечает за отклик лайка после добавления новых картинок
+  paintLike(); //Функция отвечает за отклик лайка после добавления новых картинок
 }
 
 openPlacePopup.addEventListener('click', popupPlaceStatus);
@@ -91,11 +91,38 @@ for (let i = 0; i < initialCards.length; i += 1) {
 
   const nameElement = newTask.querySelector('.elements__foto-name');
   nameElement.textContent = namePlace;
+  //функционал удаления
+  const buttonDelete = newTask.querySelector('.elements__delete');
+
+  buttonDelete.addEventListener('click', function(evt) {
+    evt.target.closest('.elements__element').remove();
+  });
+  //
   const linkElement = newTask.querySelector('.elements__foto');
   linkElement.setAttribute('src', linkPlace);
   linkElement.setAttribute('alt', namePlace);
 
   elementsSection.append(newTask);
+
+  //Функционал открытия и закрытия фотографии в попапе
+  const buttonFotoView = newTask.querySelector('.elements__foto-view');
+  const popupFoto = document.querySelector('.popup-foto');
+  const buttonFotoClose = document.querySelector('.popup-foto__close');
+  const foto = document.querySelector('.popup-foto__view');
+  const nameFoto = document.querySelector('.popup-foto__name');
+
+  buttonFotoView.addEventListener('click', function(evt) {
+    popupFoto.classList.add('popup_opened');
+    let sName = evt.target.closest('.elements__element').querySelector('.elements__foto-name').textContent;
+    console.log(sName);
+    let sLink = evt.target.closest('.elements__element').querySelector('.elements__foto').getAttribute('src');
+    nameFoto.textContent = sName;
+    foto.setAttribute('src', sLink);
+  });
+
+  buttonFotoClose.addEventListener('click', function() {
+    popupFoto.classList.remove('popup_opened');
+  });
 }
 
 buttonAdd.addEventListener('click', function() {
@@ -105,11 +132,38 @@ buttonAdd.addEventListener('click', function() {
 
   const nameElement = newTask.querySelector('.elements__foto-name');
   nameElement.textContent = nameValue;
+  //функционал удаления
+  const buttonDelete = newTask.querySelector('.elements__delete');
+  console.log(buttonDelete);
+  buttonDelete.addEventListener('click', function(evt) {
+    evt.target.closest('.elements__element').remove();
+  });
+  //
   const linkElement = newTask.querySelector('.elements__foto');
   linkElement.setAttribute('src', linkValue);
   linkElement.setAttribute('alt', nameValue);
 
   elementsSection.prepend(newTask);
+
+  //Функционал открытия и закрытия фотографии в попапе
+  const buttonFotoView = newTask.querySelector('.elements__foto-view');
+  const popupFoto = document.querySelector('.popup-foto');
+  const buttonFotoClose = document.querySelector('.popup-foto__close');
+  const foto = document.querySelector('.popup-foto__view');
+  const nameFoto = document.querySelector('.popup-foto__name');
+
+  buttonFotoView.addEventListener('click', function(evt) {
+    popupFoto.classList.add('popup_opened');
+    let sName = evt.target.closest('.elements__element').querySelector('.elements__foto-name').textContent;
+    console.log(sName);
+    let sLink = evt.target.closest('.elements__element').querySelector('.elements__foto').getAttribute('src');
+    nameFoto.textContent = sName;
+    foto.setAttribute('src', sLink);
+  });
+
+  buttonFotoClose.addEventListener('click', function() {
+    popupFoto.classList.remove('popup_opened');
+  });
 });
 
 //Функционал работы кнопки добавления карточек
@@ -120,7 +174,7 @@ function addSubmitHandler(evt) {
 
 popupPlace.addEventListener('submit', addSubmitHandler);
 //функционал изменения цвета лайка
-function testing () {
+function paintLike () {
 const activeLike = document.querySelectorAll(".elements__like");
 activeLike.forEach(function (evt) {
   evt.addEventListener("click", function () {
@@ -128,11 +182,4 @@ activeLike.forEach(function (evt) {
   });
 });
 }
-testing();
-
-//функционал удаления карточки
-/*const buttonDelete = taskTemplate.content.querySelector('.elements__delete');
-console.log(buttonDelete);
-function elementDelete() {
-
-}*/
+paintLike();
