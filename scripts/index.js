@@ -1,59 +1,65 @@
 //Функционал для попапа с изменением данных профиля
 //Функционал для открытия/закрытия попапа
-let openPopup = document.querySelector('.profile__edit-button');
-let popupProfile = document.querySelector('.popup-profile');
-let closePopup = document.querySelector('.popup__close');
+const profilePopupOpen = document.querySelector('.profile__edit-button');
+const popupProfile = document.querySelector('.popup-profile');
+const popupClose = document.querySelector('.popup__close');
 
-function popupStatus(event) {
-  popupProfile.classList.toggle('popup_opened');
-  //Функционал заполняет поля для ввода данными из строк
-  let popupOp = popupProfile.classList.contains('popup_opened');
-  if (popupOp) {
-    nameInput.value = profileName.textContent;
-    jobInput.value = profileJob.textContent;
-  }
+function openPopup(popup) {
+  popup.classList.add('popup_opened');
+}
+
+function closePopup(popup) {
+  popup.classList.remove('popup_opened');
+}
+
+function openProfilePopup () {
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileJob.textContent;
+  openPopup(popupProfile);
 }
 
 //Переменные для изменения значения value у форм попапа
-let formPopup = document.querySelector('.popup__edit-form');
-let nameInput = document.getElementById('nameInput');
-let jobInput = document.getElementById('proffInput');
-let profileName = document.querySelector('.profile__title');
-let profileJob = document.querySelector('.profile__subtitle');
+const formPopupProfile = document.getElementById('popupProfileEditForm');
+const nameInput = document.getElementById('nameInput');
+const jobInput = document.getElementById('proffInput');
+const profileName = document.querySelector('.profile__title');
+const profileJob = document.querySelector('.profile__subtitle');
 
-//Функционал для изменения значения value у форм попапа
+//Функционал для изменения значения текста в профиле
 function formSubmitHandler(evt) {
   evt.preventDefault();
 
   profileName.textContent = nameInput.value;
   profileJob.textContent = jobInput.value;
-  popupStatus();
+  closePopup(popupProfile);
 }
-formPopup.addEventListener('submit', formSubmitHandler);
-openPopup.addEventListener('click', popupStatus);
-closePopup.addEventListener('click', popupStatus);
+formPopupProfile.addEventListener('submit', formSubmitHandler);
+profilePopupOpen.addEventListener('click', openProfilePopup);
+popupClose.addEventListener('click', function() {
+  closePopup(popupProfile);
+});
 
 //Функционал для попапа с добавлением картинок
-let openPlacePopup = document.querySelector('.profile__add-button');
-let popupPlace = document.querySelector('.popup-place');
-let closePlacePopup = document.querySelector('.popup-place__close');
+const placePopupOpen = document.querySelector('.profile__add-button');
+const popupPlace = document.querySelector('.popup-place');
+const placePopupClose = document.getElementById('popupPlaceClose');
 
-function popupPlaceStatus(event) {
-  popupPlace.classList.toggle('popup_opened');
-  paintLike(); //Функция отвечает за отклик лайка после добавления новых картинок
+function changePopupPlaceStatus() {
+  openPopup(popupPlace);
 }
 
-openPlacePopup.addEventListener('click', popupPlaceStatus);
-closePlacePopup.addEventListener('click', popupPlaceStatus);
+placePopupOpen.addEventListener('click', changePopupPlaceStatus);
+placePopupClose.addEventListener('click', function() {
+  closePopup(popupPlace);
+});
 
-//функционал попапа с просмотром картинки
 
 //функционал автоматической загрузки картинок в начале на страницу
 const buttonAdd = document.getElementById('popupPlaceSubmitButton');   //Кнопка "создать" отправляет данные из формы с именем и ссылкой на картинку
-const inputNamePlace = document.getElementById('namePlace');        //Поле вводе наименования картинки
-const inputLinkPlace = document.getElementById('picLink');          //Поле ввода ссылки на картинку которая должна попасть в поле src в html
-const elementsSection = document.querySelector('.elements');         //Добавление секции в дом элемент, которая будет заполняться карточками
-const taskTemplate = document.getElementById('template');           //Шаблон карточки которая будет клонироваться
+const inputNamePlace = document.getElementById('namePlace');           //Поле вводе наименования картинки
+const inputLinkPlace = document.getElementById('picLink');             //Поле ввода ссылки на картинку которая должна попасть в поле src в html
+const elementsSection = document.querySelector('.elements');          //Добавление секции в дом элемент, которая будет заполняться карточками
+const taskTemplate = document.getElementById('template');             //Шаблон карточки которая будет клонироваться
 
 //Массив с изменяющимеся данными карточек
 const initialCards = [
@@ -83,103 +89,71 @@ const initialCards = [
   }
 ];
 
-for (let i = 0; i < initialCards.length; i += 1) {
-  const namePlace = initialCards[i].name;
-  const linkPlace = initialCards[i].link;
 
+function createCard(nameCard, linkCard) {
   const newTask = taskTemplate.content.querySelector('.elements__element').cloneNode('true');
-
   const nameElement = newTask.querySelector('.elements__foto-name');
-  nameElement.textContent = namePlace;
+  const linkElement = newTask.querySelector('.elements__foto');
   //функционал удаления
-  const buttonDelete = newTask.querySelector('.elements__delete');
-
+    const buttonDelete = newTask.querySelector('.elements__delete');
   buttonDelete.addEventListener('click', function(evt) {
     evt.target.closest('.elements__element').remove();
   });
   //
-  const linkElement = newTask.querySelector('.elements__foto');
-  linkElement.setAttribute('src', linkPlace);
-  linkElement.setAttribute('alt', namePlace);
+  //функционал лайка
+  const activeLike = newTask.querySelector(".elements__like");
+  activeLike.addEventListener("click", function (evt) {
+    evt.target.closest('.elements__element').querySelector('.elements__like').classList.toggle("elements__active-like");
+  });
+  //
+  nameElement.textContent = nameCard;
 
-  elementsSection.append(newTask);
+  linkElement.setAttribute('src', linkCard);
+  linkElement.setAttribute('alt', nameCard);
 
   //Функционал открытия и закрытия фотографии в попапе
-  const buttonFotoView = newTask.querySelector('.elements__foto-view');
-  const popupFoto = document.querySelector('.popup-foto');
-  const buttonFotoClose = document.querySelector('.popup-foto__close');
-  const foto = document.querySelector('.popup-foto__view');
-  const nameFoto = document.querySelector('.popup-foto__name');
+  const buttonPhotoView = newTask.querySelector('.elements__foto-view');
+  const popupPhoto = document.querySelector('.popup-foto');
+  const buttonPhotoClose = document.getElementById('popupFotoClose');
+  const photo = document.querySelector('.popup-foto__view');
+  const namePhoto = document.querySelector('.popup-foto__name');
 
-  buttonFotoView.addEventListener('click', function(evt) {
-    popupFoto.classList.add('popup_opened');
-    let sName = evt.target.closest('.elements__element').querySelector('.elements__foto-name').textContent;
-    console.log(sName);
-    let sLink = evt.target.closest('.elements__element').querySelector('.elements__foto').getAttribute('src');
-    nameFoto.textContent = sName;
-    foto.setAttribute('src', sLink);
+  buttonPhotoView.addEventListener('click', function(evt) {
+    const sName = evt.target.closest('.elements__element').querySelector('.elements__foto-name').textContent;
+    const sLink = evt.target.closest('.elements__element').querySelector('.elements__foto').getAttribute('src');
+    namePhoto.textContent = sName;
+    photo.setAttribute('src', sLink);
+    photo.setAttribute('alt', sName);
+    openPopup(popupPhoto);
   });
 
-  buttonFotoClose.addEventListener('click', function() {
-    popupFoto.classList.remove('popup_opened');
+  buttonPhotoClose.addEventListener('click', function() {
+    closePopup(popupPhoto);
   });
+
+  return newTask;
+}
+
+for (let i = 0; i < initialCards.length; i += 1) {
+  const namePlace = initialCards[i].name;
+  const linkPlace = initialCards[i].link;
+  const newCard = createCard(namePlace, linkPlace);
+  elementsSection.append(newCard);
 }
 
 buttonAdd.addEventListener('click', function() {
   const nameValue = inputNamePlace.value;
   const linkValue = inputLinkPlace.value;
-  const newTask = taskTemplate.content.querySelector('.elements__element').cloneNode('true');
 
-  const nameElement = newTask.querySelector('.elements__foto-name');
-  nameElement.textContent = nameValue;
-  //функционал удаления
-  const buttonDelete = newTask.querySelector('.elements__delete');
-  console.log(buttonDelete);
-  buttonDelete.addEventListener('click', function(evt) {
-    evt.target.closest('.elements__element').remove();
-  });
-  //
-  const linkElement = newTask.querySelector('.elements__foto');
-  linkElement.setAttribute('src', linkValue);
-  linkElement.setAttribute('alt', nameValue);
-
-  elementsSection.prepend(newTask);
-
-  //Функционал открытия и закрытия фотографии в попапе
-  const buttonFotoView = newTask.querySelector('.elements__foto-view');
-  const popupFoto = document.querySelector('.popup-foto');
-  const buttonFotoClose = document.querySelector('.popup-foto__close');
-  const foto = document.querySelector('.popup-foto__view');
-  const nameFoto = document.querySelector('.popup-foto__name');
-
-  buttonFotoView.addEventListener('click', function(evt) {
-    popupFoto.classList.add('popup_opened');
-    let sName = evt.target.closest('.elements__element').querySelector('.elements__foto-name').textContent;
-    console.log(sName);
-    let sLink = evt.target.closest('.elements__element').querySelector('.elements__foto').getAttribute('src');
-    nameFoto.textContent = sName;
-    foto.setAttribute('src', sLink);
-  });
-
-  buttonFotoClose.addEventListener('click', function() {
-    popupFoto.classList.remove('popup_opened');
-  });
+  const newCard = createCard(nameValue, linkValue);
+  elementsSection.prepend(newCard);
 });
 
 //Функционал работы кнопки добавления карточек
 function addSubmitHandler(evt) {
   evt.preventDefault();
-  popupPlaceStatus();
+  changePopupPlaceStatus();
+  closePopup(popupPlace);
 }
 
 popupPlace.addEventListener('submit', addSubmitHandler);
-//функционал изменения цвета лайка
-function paintLike () {
-const activeLike = document.querySelectorAll(".elements__like");
-activeLike.forEach(function (evt) {
-  evt.addEventListener("click", function () {
-    evt.classList.toggle("elements__active-like");;
-  });
-});
-}
-paintLike();
