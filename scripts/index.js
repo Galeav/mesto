@@ -1,66 +1,3 @@
-//Функционал для попапа с изменением данных профиля
-//Функционал для открытия/закрытия попапа
-const profilePopupOpen = document.querySelector('.profile__edit-button');
-const popupProfile = document.querySelector('.popup-profile');
-const popupClose = document.querySelector('.popup__close');
-
-function openPopup(popup) {
-  popup.classList.add('popup_opened');
-}
-
-function closePopup(popup) {
-  popup.classList.remove('popup_opened');
-}
-
-function openProfilePopup () {
-  nameInput.value = profileName.textContent;
-  jobInput.value = profileJob.textContent;
-  openPopup(popupProfile);
-}
-
-//Переменные для изменения значения value у форм попапа
-const formPopupProfile = document.getElementById('popupProfileEditForm');
-const nameInput = document.getElementById('nameInput');
-const jobInput = document.getElementById('proffInput');
-const profileName = document.querySelector('.profile__title');
-const profileJob = document.querySelector('.profile__subtitle');
-
-//Функционал для изменения значения текста в профиле
-function formSubmitHandler(evt) {
-  evt.preventDefault();
-
-  profileName.textContent = nameInput.value;
-  profileJob.textContent = jobInput.value;
-  closePopup(popupProfile);
-}
-formPopupProfile.addEventListener('submit', formSubmitHandler);
-profilePopupOpen.addEventListener('click', openProfilePopup);
-popupClose.addEventListener('click', function() {
-  closePopup(popupProfile);
-});
-
-//Функционал для попапа с добавлением картинок
-const placePopupOpen = document.querySelector('.profile__add-button');
-const popupPlace = document.querySelector('.popup-place');
-const placePopupClose = document.getElementById('popupPlaceClose');
-
-function changePopupPlaceStatus() {
-  openPopup(popupPlace);
-}
-
-placePopupOpen.addEventListener('click', changePopupPlaceStatus);
-placePopupClose.addEventListener('click', function() {
-  closePopup(popupPlace);
-});
-
-
-//функционал автоматической загрузки картинок в начале на страницу
-const buttonAdd = document.getElementById('popupPlaceSubmitButton');   //Кнопка "создать" отправляет данные из формы с именем и ссылкой на картинку
-const inputNamePlace = document.getElementById('namePlace');           //Поле вводе наименования картинки
-const inputLinkPlace = document.getElementById('picLink');             //Поле ввода ссылки на картинку которая должна попасть в поле src в html
-const elementsSection = document.querySelector('.elements');          //Добавление секции в дом элемент, которая будет заполняться карточками
-const taskTemplate = document.getElementById('template');             //Шаблон карточки которая будет клонироваться
-
 //Массив с изменяющимеся данными карточек
 const initialCards = [
   {
@@ -89,6 +26,68 @@ const initialCards = [
   }
 ];
 
+const profilePopupOpen = document.querySelector('.profile__edit-button');
+const popupProfile = document.querySelector('.popup-profile');
+const popupClose = document.querySelector('.popup__close');
+
+//Переменные для изменения значения value у форм попапа
+const formPopupProfile = document.getElementById('popupProfileEditForm');
+const nameInput = document.getElementById('nameInput');
+const jobInput = document.getElementById('proffInput');
+const profileName = document.querySelector('.profile__title');
+const profileJob = document.querySelector('.profile__subtitle');
+
+//Функционал для попапа с добавлением картинок
+const placePopupOpen = document.querySelector('.profile__add-button');
+const popupPlace = document.querySelector('.popup-place');
+const placePopupClose = document.getElementById('popupPlaceClose');
+
+//переменные для функционала автоматической загрузки картинок в начале на страницу
+const buttonAdd = document.getElementById('popupPlaceSubmitButton');   //Кнопка "создать" отправляет данные из формы с именем и ссылкой на картинку
+const inputNamePlace = document.getElementById('namePlace');           //Поле вводе наименования картинки
+const inputLinkPlace = document.getElementById('picLink');             //Поле ввода ссылки на картинку которая должна попасть в поле src в html
+const elementsSection = document.querySelector('.elements');          //Добавление секции в дом элемент, которая будет заполняться карточками
+const taskTemplate = document.getElementById('template');             //Шаблон карточки которая будет клонироваться
+
+//Функционал для попапа с изменением данных профиля
+//Функционал для открытия/закрытия попапа
+
+function openPopup(popup) {
+  popup.classList.add('popup_opened');
+}
+
+function closePopup(popup) {
+  popup.classList.remove('popup_opened');
+}
+
+function openProfilePopup () {
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileJob.textContent;
+  openPopup(popupProfile);
+}
+
+//Функционал для изменения значения текста в профиле
+function formSubmitHandler(evt) {
+  evt.preventDefault();
+
+  profileName.textContent = nameInput.value;
+  profileJob.textContent = jobInput.value;
+  closePopup(popupProfile);
+}
+formPopupProfile.addEventListener('submit', formSubmitHandler);
+profilePopupOpen.addEventListener('click', openProfilePopup);
+popupClose.addEventListener('click', function() {
+  closePopup(popupProfile);
+});
+
+function changePopupPlaceStatus() {
+  openPopup(popupPlace);
+}
+
+placePopupOpen.addEventListener('click', changePopupPlaceStatus);
+placePopupClose.addEventListener('click', function() {
+  closePopup(popupPlace);
+});
 
 function createCard(nameCard, linkCard) {
   const newTask = taskTemplate.content.querySelector('.elements__element').cloneNode('true');
@@ -134,13 +133,7 @@ function createCard(nameCard, linkCard) {
   return newTask;
 }
 
-for (let i = 0; i < initialCards.length; i += 1) {
-  const namePlace = initialCards[i].name;
-  const linkPlace = initialCards[i].link;
-  const newCard = createCard(namePlace, linkPlace);
-  elementsSection.append(newCard);
-}
-
+//функционал добавления карточек
 buttonAdd.addEventListener('click', function() {
   const nameValue = inputNamePlace.value;
   const linkValue = inputLinkPlace.value;
@@ -157,3 +150,11 @@ function addSubmitHandler(evt) {
 }
 
 popupPlace.addEventListener('submit', addSubmitHandler);
+
+//функционал загрузки базоваых карточек
+for (let i = 0; i < initialCards.length; i += 1) {
+  const namePlace = initialCards[i].name;
+  const linkPlace = initialCards[i].link;
+  const newCard = createCard(namePlace, linkPlace);
+  elementsSection.append(newCard);
+}
