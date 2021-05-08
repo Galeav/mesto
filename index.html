@@ -17,7 +17,7 @@
 
     <div class="popup popup-profile">
       <div class="popup__container">
-        <button type="button" class="popup__close link-hover"></button>
+        <button type="button" class="popup__close link-hover" id="popupProfileClose"></button>
         <form name="profileInfo" class="popup__edit-form" id="popupProfileEditForm">
           <h2 class="popup__form-name">Редактировать профиль</h2>
           <input type="text" name="addName" value="" placeholder="Имя" class="popup__input-field" id="nameInput">
@@ -42,7 +42,7 @@
     <div class="popup popup-foto">
       <div class="popup-foto__container">
         <button type="button" class="popup__close link-hover" id="popupFotoClose"></button>
-        <img src="..." alt="..." class="popup-foto__view">                                    <!--Здесь значения src и alt были пустыми, но, авто-тесты Яндекса так не пускают :)-->
+        <img src="./images/Litle_cat.jpg" alt="Котёнок" class="popup-foto__view">
         <h3 class="popup-foto__name"></h3>
       </div>
     </div>
@@ -68,7 +68,7 @@
       <section class="elements">
         <template id="template" class="template">
           <article class="elements__element">
-            <button type="button" class="elements__foto-view"><img src="..." alt="..." class="elements__foto"></button>   <!--Здесь значения src и alt были пустыми, но, авто-тесты Яндекса так не пускают :)-->
+            <button type="button" class="elements__foto-view"><img src="./images/Litle_cat.jpg" alt="Котёнок" class="elements__foto"></button>
             <div class="elements__container">
               <h2 class="elements__foto-name"></h2>
               <button type="button" class="elements__like"></button>
