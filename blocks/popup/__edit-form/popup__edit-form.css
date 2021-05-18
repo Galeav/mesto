@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   width: 430px;
-  height: 330px;
 }
 
 @media (max-width: 559px) {

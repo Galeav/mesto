@@ -1,36 +1,9 @@
-//Массив с изменяющимеся данными карточек
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
-
 const profilePopupOpen = document.querySelector('.profile__edit-button');
 const popupProfile = document.querySelector('.popup-profile');
 const popupProfileClose = document.getElementById('popupProfileClose');
 const buttonPhotoClose = document.getElementById('popupFotoClose');
 const popupPhoto = document.querySelector('.popup-foto');
+const popup = document.querySelectorAll('.popup')
 
 //Переменные для изменения значения value у форм попапа
 const formPopupProfile = document.getElementById('popupProfileEditForm');
@@ -54,8 +27,31 @@ const taskTemplate = document.getElementById('template');             //Шабл
 //Функционал для попапа с изменением данных профиля
 //Функционал для открытия/закрытия попапа
 
+//Функция закрывающая попап по клику на оверлей и снимающая слушатель
+const closePopupClickOwer = (popup) => {
+  popup.addEventListener('click', listenerClick);
+  function listenerClick(event) {
+    if (event.target === event.currentTarget) {
+      closePopup(popup);
+      popup.removeEventListener('click', listenerClick);
+  }
+  }
+}
+//Функция закрывающая попап по нажатию клавиши ESC и снимающая слушатель
+const closePopupPressEsc = (popup) => {
+  document.addEventListener('keydown', listenerPress);
+  function listenerPress(evt) {
+    if (evt.key === 'Escape') {
+      closePopup(popup);
+      document.removeEventListener('keydown', listenerPress);
+    }
+  };
+}
 function openPopup(popup) {
   popup.classList.add('popup_opened');
+
+  closePopupClickOwer(popup);
+  closePopupPressEsc(popup);
 }
 
 function closePopup(popup) {
@@ -76,6 +72,7 @@ function changesProfileData(evt) {
   profileJob.textContent = jobInput.value;
   closePopup(popupProfile);
 }
+
 formPopupProfile.addEventListener('submit', changesProfileData);
 profilePopupOpen.addEventListener('click', openProfilePopup);
 popupProfileClose.addEventListener('click', function() {
