@@ -1,14 +1,14 @@
 //Скрываем ошибку
-const hideInpurError = (formElement, inputElement) => {
+const hideInputError = (formElement, inputElement, config) => {
   const warningElement = formElement.querySelector(`#${inputElement.id}-warning`);
-  inputElement.classList.remove('popup__input-field_status_error');
+  inputElement.classList.remove(config.inputErrorClass);
   warningElement.textContent = '';
 }
 
 //Показываем ошибку
-const showInputError = (formElement, inputElement) => {
+const showInputError = (formElement, inputElement, config) => {
   const warningElement = formElement.querySelector(`#${inputElement.id}-warning`);
-  inputElement.classList.add('popup__input-field_status_error');
+  inputElement.classList.add(config.inputErrorClass);
   warningElement.textContent = inputElement.validationMessage;
 }
 
@@ -17,48 +17,56 @@ const hazInvalidInput = (inputList) => {
 }
 
 //Функция отвещающая за включение и отключение кнопки
-const toggleButtonState = (buttonElement, inputList) => {
+const toggleButtonState = (buttonElement, inputList, config) => {
   if (hazInvalidInput(inputList)) {
     buttonElement.disabled = true;
-    buttonElement.classList.add('popup__submit-button_invalid');
+    buttonElement.classList.add(config.inactiveButtonClass);
   } else {
     buttonElement.disabled = false;
-    buttonElement.classList.remove('popup__submit-button_invalid');
+    buttonElement.classList.remove(config.inactiveButtonClass);
   }
 }
 
 //Функция проверки поля на валидность и вызов функций последующих действий
-const controlInputValidity = (formElement, inputElement) => {
+const controlInputValidity = (formElement, inputElement, config) => {
 
   if (inputElement.validity.valid) {
-    hideInpurError(formElement, inputElement);
+    hideInputError(formElement, inputElement, config);
   } else {
-    showInputError(formElement, inputElement);
+    showInputError(formElement, inputElement, config);
   }
 }
 
 //Функция находит все поля ввода конкретной формы и навешивает им слушатели
-const setEventListeners = (formElement) => {
-  const inputList = Array.from(formElement.querySelectorAll('.popup__input-field'));
+const setEventListeners = (formElement, config) => {
+  const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
 
-  const buttonElement = formElement.querySelector('.popup__submit-button');
+  const buttonElement = formElement.querySelector(config.submitButtonSelector);
 
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', () => {
       //Проверяем валидность вводимых значений
-      controlInputValidity(formElement, inputElement);
-      toggleButtonState(buttonElement, inputList);
+      controlInputValidity(formElement, inputElement, config);
+      toggleButtonState(buttonElement, inputList, config);
     });
   });
-  toggleButtonState(buttonElement, inputList);
+  toggleButtonState(buttonElement, inputList, config);
 }
 
 //Функция находит все формы на странице и перебирает их по отдельности
-const enableValidation = () => {
-  const formList = Array.from(document.querySelectorAll('.popup__edit-form'));
+const enableValidation = (config) => {
+  const formList = Array.from(document.querySelectorAll(config.formSelector));
 
   formList.forEach((formElement) => {
-    setEventListeners(formElement);
+    setEventListeners(formElement, config);
   });
 }
-enableValidation();
+
+enableValidation({
+  formSelector: '.popup__edit-form',
+  inputSelector: '.popup__input-field',
+  submitButtonSelector: '.popup__submit-button',
+  inactiveButtonClass: 'popup__submit-button_invalid',
+  inputErrorClass: 'popup__input-field_status_error'
+});
+

@@ -3,7 +3,7 @@ const popupProfile = document.querySelector('.popup-profile');
 const popupProfileClose = document.getElementById('popupProfileClose');
 const buttonPhotoClose = document.getElementById('popupFotoClose');
 const popupPhoto = document.querySelector('.popup-foto');
-const popup = document.querySelectorAll('.popup')
+const popup = document.querySelectorAll('.popup');
 
 //Переменные для изменения значения value у форм попапа
 const formPopupProfile = document.getElementById('popupProfileEditForm');
@@ -38,24 +38,54 @@ const closePopupClickOwer = (popup) => {
   }
 }
 //Функция закрывающая попап по нажатию клавиши ESC и снимающая слушатель
-const closePopupPressEsc = (popup) => {
-  document.addEventListener('keydown', listenerPress);
-  function listenerPress(evt) {
-    if (evt.key === 'Escape') {
-      closePopup(popup);
-      document.removeEventListener('keydown', listenerPress);
-    }
-  };
+const closePopupPressEsc = (evt) => {
+  const popupOpened = document.querySelector('.popup_opened');
+  if (evt.key === 'Escape') {
+    closePopup(popupOpened);
+  }
 }
+
+const itemForHideError = {
+  inputErrorClass: 'popup__input-field_status_error'
+}
+
+//Функция обнуляющая ошибки валидации в закрываемой форме
+const cleanerWarningValidation = () => {
+  const popupOpened = document.querySelector('.popup_opened');
+  const inputElements = popupOpened.querySelectorAll('.popup__input-field');
+  inputElements.forEach((inputElement) => {
+    hideInputError(popupOpened, inputElement, itemForHideError);
+  });
+}
+
+//Функция блокирующая кнопку отправки формы, при закрытии саомй формы на крестик
+const blockButtonPopup = () => {
+  const popupOpened = document.querySelector('.popup_opened');
+  const buttonPopup = popupOpened.querySelector('.popup__submit-button');
+  buttonPopup.disabled = true;
+  buttonPopup.classList.add('popup__submit-button_invalid');
+}
+
 function openPopup(popup) {
   popup.classList.add('popup_opened');
 
+  if (popup.querySelector('.popup__edit-form')) {       //Условие необходимо для того, что-бы движок не пытался выполнить это действие при открытии иных попапов
+    popup.querySelector('.popup__edit-form').reset();
+    cleanerWarningValidation();                         //Сбрасываем ошибки
+    blockButtonPopup();                                 //Блокируем кнопку
+  }
+  //Закрытие попапа по нажатию на Esc
+  document.addEventListener('keydown', closePopupPressEsc);
+
+  //Функция со слушателем для закрытия попапа по клику на оверлей
   closePopupClickOwer(popup);
-  closePopupPressEsc(popup);
 }
 
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
+
+  //Удаляем слушатель закрытия попапа на клавишу Esc
+  document.removeEventListener('keydown', closePopupPressEsc);
 }
 
 function openProfilePopup () {
@@ -79,12 +109,11 @@ popupProfileClose.addEventListener('click', function() {
   closePopup(popupProfile);
 });
 
-function changePopupPlaceStatus() {
+placePopupOpen.addEventListener('click', () => {
   openPopup(popupPlace);
-}
+});
 
-placePopupOpen.addEventListener('click', changePopupPlaceStatus);
-placePopupClose.addEventListener('click', function() {
+placePopupClose.addEventListener('click', () => {
   closePopup(popupPlace);
 });
 
@@ -114,12 +143,10 @@ function createCard(nameCard, linkCard) {
   const photo = document.querySelector('.popup-foto__view');
   const namePhoto = document.querySelector('.popup-foto__name');
 
-  buttonPhotoView.addEventListener('click', function(evt) {
-    const sName = evt.target.closest('.elements__element').querySelector('.elements__foto-name').textContent;
-    const sLink = evt.target.closest('.elements__element').querySelector('.elements__foto').getAttribute('src');
-    namePhoto.textContent = sName;
-    photo.setAttribute('src', sLink);
-    photo.setAttribute('alt', sName);
+  buttonPhotoView.addEventListener('click', function() {
+    namePhoto.textContent = nameCard;
+    photo.setAttribute('src', linkCard);
+    photo.setAttribute('alt', nameCard);
     openPopup(popupPhoto);
   });
 
@@ -138,16 +165,16 @@ function addSubmitHandlerPlace(evt) {
 
   const newCard = createCard(nameValue, linkValue);
   elementsSection.prepend(newCard);
-
+  buttonAdd.disabled = true;
   closePopup(popupPlace);
 }
 
 popupPlace.addEventListener('submit', addSubmitHandlerPlace);
 
 //функционал загрузки базоваых карточек
-for (let i = 0; i < initialCards.length; i += 1) {
-  const namePlace = initialCards[i].name;
-  const linkPlace = initialCards[i].link;
+initialCards.forEach((item) => {
+  const namePlace = item.name;
+  const linkPlace = item.link;
   const newCard = createCard(namePlace, linkPlace);
   elementsSection.append(newCard);
-}
+});
