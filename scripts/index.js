@@ -1,12 +1,12 @@
 const profilePopupOpen = document.querySelector('.profile__edit-button');
 const popupProfile = document.querySelector('.popup-profile');
-const popupProfileClose = document.getElementById('popupProfileClose');
 const buttonPhotoClose = document.getElementById('popupFotoClose');
 const popupPhoto = document.querySelector('.popup-foto');
 const popup = document.querySelectorAll('.popup');
 
 //Переменные для изменения значения value у форм попапа
 const formPopupProfile = document.getElementById('popupProfileEditForm');
+const formPopupPlace = document.getElementById('popupAddPlaceForm');
 const nameInput = document.getElementById('nameInput');
 const jobInput = document.getElementById('proffInput');
 const profileName = document.querySelector('.profile__title');
@@ -15,7 +15,6 @@ const profileJob = document.querySelector('.profile__subtitle');
 //Функционал для попапа с добавлением картинок
 const placePopupOpen = document.querySelector('.profile__add-button');
 const popupPlace = document.querySelector('.popup-place');
-const placePopupClose = document.getElementById('popupPlaceClose');
 
 //переменные для функционала автоматической загрузки картинок в начале на страницу
 const buttonAdd = document.getElementById('popupPlaceSubmitButton');   //Кнопка "создать" отправляет данные из формы с именем и ссылкой на картинку
@@ -28,14 +27,12 @@ const taskTemplate = document.getElementById('template');             //Шабл
 //Функционал для открытия/закрытия попапа
 
 //Функция закрывающая попап по клику на оверлей и снимающая слушатель
-const closePopupClickOwer = (popup) => {
-  popup.addEventListener('click', listenerClick);
-  function listenerClick(event) {
-    if (event.target === event.currentTarget) {
-      closePopup(popup);
-      popup.removeEventListener('click', listenerClick);
+const closePopupTarget = (popup) => {
+  popup.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close')) {
+    closePopup(popup);
   }
-  }
+});
 }
 //Функция закрывающая попап по нажатию клавиши ESC и снимающая слушатель
 const closePopupPressEsc = (evt) => {
@@ -45,40 +42,14 @@ const closePopupPressEsc = (evt) => {
   }
 }
 
-const itemForHideError = {
-  inputErrorClass: 'popup__input-field_status_error'
-}
-
-//Функция обнуляющая ошибки валидации в закрываемой форме
-const cleanerWarningValidation = () => {
-  const popupOpened = document.querySelector('.popup_opened');
-  const inputElements = popupOpened.querySelectorAll('.popup__input-field');
-  inputElements.forEach((inputElement) => {
-    hideInputError(popupOpened, inputElement, itemForHideError);
-  });
-}
-
-//Функция блокирующая кнопку отправки формы, при закрытии саомй формы на крестик
-const blockButtonPopup = () => {
-  const popupOpened = document.querySelector('.popup_opened');
-  const buttonPopup = popupOpened.querySelector('.popup__submit-button');
-  buttonPopup.disabled = true;
-  buttonPopup.classList.add('popup__submit-button_invalid');
-}
-
 function openPopup(popup) {
   popup.classList.add('popup_opened');
 
-  if (popup.querySelector('.popup__edit-form')) {       //Условие необходимо для того, что-бы движок не пытался выполнить это действие при открытии иных попапов
-    popup.querySelector('.popup__edit-form').reset();
-    cleanerWarningValidation();                         //Сбрасываем ошибки
-    blockButtonPopup();                                 //Блокируем кнопку
-  }
   //Закрытие попапа по нажатию на Esc
   document.addEventListener('keydown', closePopupPressEsc);
 
-  //Функция со слушателем для закрытия попапа по клику на оверлей
-  closePopupClickOwer(popup);
+  //Функция со слушателем для закрытия попапа на крестик и оверлей
+  closePopupTarget(popup);
 }
 
 function closePopup(popup) {
@@ -91,6 +62,15 @@ function closePopup(popup) {
 function openProfilePopup () {
   nameInput.value = profileName.textContent;
   jobInput.value = profileJob.textContent;
+
+  //Функционал сброса ошибки валидации
+  const inputProfilePopup = formPopupProfile.querySelectorAll('.popup__input-field');
+  inputProfilePopup.forEach((inputElement) => {
+    inputElement.classList.remove('popup__input-field_status_error');
+    const errorElement = formPopupProfile.querySelector(`#${inputElement.id}-warning`);
+    errorElement.textContent = '';
+  });
+
   openPopup(popupProfile);
 }
 
@@ -105,16 +85,21 @@ function changesProfileData(evt) {
 
 formPopupProfile.addEventListener('submit', changesProfileData);
 profilePopupOpen.addEventListener('click', openProfilePopup);
-popupProfileClose.addEventListener('click', function() {
-  closePopup(popupProfile);
-});
 
 placePopupOpen.addEventListener('click', () => {
-  openPopup(popupPlace);
-});
+  popupPlace.querySelector('.popup__edit-form').reset();
 
-placePopupClose.addEventListener('click', () => {
-  closePopup(popupPlace);
+  //Функционал сброса ошибки валидации
+  const inputPlacePopup = formPopupPlace.querySelectorAll('.popup__input-field');
+  inputPlacePopup.forEach((inputElement) => {
+    inputElement.classList.remove('popup__input-field_status_error');
+    const errorElement = formPopupPlace.querySelector(`#${inputElement.id}-warning`);
+    errorElement.textContent = '';
+  });
+
+  buttonAdd.disabled = true;                                      //Добавлено блокирование кнопки при открытии, чтобы избежать обхода её блокировки,
+  buttonAdd.classList.add('popup__submit-button_invalid');       //при комбинации ввода валидных значений, закрытие формы и её повторного открытия
+  openPopup(popupPlace);
 });
 
 function createCard(nameCard, linkCard) {
@@ -172,9 +157,6 @@ function addSubmitHandlerPlace(evt) {
 popupPlace.addEventListener('submit', addSubmitHandlerPlace);
 
 //функционал загрузки базоваых карточек
-initialCards.forEach((item) => {
-  const namePlace = item.name;
-  const linkPlace = item.link;
-  const newCard = createCard(namePlace, linkPlace);
-  elementsSection.append(newCard);
+initialCards.forEach((card) => {
+  elementsSection.append(createCard(card.name, card.link))
 });
