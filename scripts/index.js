@@ -27,14 +27,13 @@ const taskTemplate = document.getElementById('template');             //Шабл
 //Функционал для открытия/закрытия попапа
 
 //Функция закрывающая попап по клику на оверлей и снимающая слушатель
-const closePopupTarget = (popup) => {
-  popup.addEventListener('click', (evt) => {
+const closePopupTarget = (evt) => {
+  const popupOpened = document.querySelector('.popup_opened');
   if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close')) {
-    closePopup(popup);
+    closePopup(popupOpened);
   }
-});
 }
-//Функция закрывающая попап по нажатию клавиши ESC и снимающая слушатель
+//Функция закрывающая попап по нажатию клавиши ESC
 const closePopupPressEsc = (evt) => {
   const popupOpened = document.querySelector('.popup_opened');
   if (evt.key === 'Escape') {
@@ -49,7 +48,7 @@ function openPopup(popup) {
   document.addEventListener('keydown', closePopupPressEsc);
 
   //Функция со слушателем для закрытия попапа на крестик и оверлей
-  closePopupTarget(popup);
+  document.addEventListener('click', closePopupTarget);
 }
 
 function closePopup(popup) {
@@ -57,6 +56,7 @@ function closePopup(popup) {
 
   //Удаляем слушатель закрытия попапа на клавишу Esc
   document.removeEventListener('keydown', closePopupPressEsc);
+  document.removeEventListener('click', closePopupTarget);
 }
 
 function openProfilePopup () {
